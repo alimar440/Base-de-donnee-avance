@@ -36,10 +36,41 @@
                                 Personne  
                             WHERE 
                                 nomPers = "Diallo" &&  prenomPers = "Pape")
+--4 les frere et soeurs uterins(ayant la meme mere) de Fatou ndiaye
+
 
 --5 Les femmes avec le plus d'enfant  
 
-    
+    SELECT 
+        nomPers ,
+        prenomPers
+    FROM
+        Personne
+    JOIN
+        MereDe M ON M.numPersMere = numPers 
+    GROUP BY
+        numPersMere
+    HAVING count(numPersEnfant) >= ALL (SELECT count(numPersEnfant) 
+                                    FROM MereDe 
+                                    GROUP BY numPersMere
+                                    )
+
+
+--6 les personnes sans enfant 
+
+    SELECT
+        nomPers ,
+        prenomPers
+    FROM
+        Personne
+    WHERE
+        numPers NOT IN (
+                        (SELECT numPersMere 
+                        FROM MereDe )
+                            UNION  
+                        (SELECT numPersPere 
+                        FROM PereDe) )
+
 
         
 
